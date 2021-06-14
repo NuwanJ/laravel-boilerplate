@@ -17,17 +17,17 @@
         <li class="c-header-nav-item px-3"><a class="c-header-nav-link" href="{{ route('frontend.index') }}">@lang('Home')</a></li>
 
         @if(config('boilerplate.locale.status') && count(config('boilerplate.locale.languages')) > 1)
-            <li class="c-header-nav-item dropdown">
-                <x-utils.link
-                    :text="__(getLocaleName(app()->getLocale()))"
-                    class="c-header-nav-link dropdown-toggle"
-                    id="navbarDropdownLanguageLink"
-                    data-toggle="dropdown"
-                    aria-haspopup="true"
-                    aria-expanded="false" />
+        <li class="c-header-nav-item dropdown">
+            <x-utils.link
+            :text="__(getLocaleName(app()->getLocale()))"
+            class="c-header-nav-link dropdown-toggle"
+            id="navbarDropdownLanguageLink"
+            data-toggle="dropdown"
+            aria-haspopup="true"
+            aria-expanded="false" />
 
-                @include('includes.partials.lang')
-            </li>
+            @include('includes.partials.lang')
+        </li>
         @endif
     </ul>
 
@@ -43,27 +43,34 @@
 
             <div class="dropdown-menu dropdown-menu-right pt-0">
                 <div class="dropdown-header bg-light py-2">
-                    <strong>@lang('Account')</strong>
+                    <strong>
+                        <!-- @lang('Account') -->
+                        {{{ isset(Auth::user()->email) ? Auth::user()->email : "" }}}
+                    </strong>
                 </div>
 
-                <x-utils.link
-                    class="dropdown-item"
-                    icon="c-icon mr-2 cil-account-logout"
-                    onclick="event.preventDefault();document.getElementById('logout-form').submit();">
+                <x-utils.link class="dropdown-item" href="{{ route('frontend.user.account' )}}" icon="c-icon mr-2 cil-gear">
                     <x-slot name="text">
-                        @lang('Logout')
-                        <x-forms.post :action="route('frontend.auth.logout')" id="logout-form" class="d-none" />
+                        Profile
                     </x-slot>
                 </x-utils.link>
-            </div>
-        </li>
-    </ul>
 
-    <div class="c-subheader justify-content-between px-3">
-        @include('backend.includes.partials.breadcrumbs')
+                <x-utils.link class="dropdown-item" icon="c-icon mr-2 cil-account-logout" onclick="event.preventDefault();document.getElementById('logout-form').submit();">
+                <x-slot name="text">
+                    @lang('Logout')
+                    <x-forms.post :action="route('frontend.auth.logout')" id="logout-form" class="d-none" />
+                </x-slot>
+            </x-utils.link>
 
-        <div class="c-subheader-nav mfe-2">
-            @yield('breadcrumb-links')
         </div>
-    </div><!--c-subheader-->
+    </li>
+</ul>
+
+<div class="c-subheader justify-content-between px-3">
+    @include('backend.includes.partials.breadcrumbs')
+
+    <div class="c-subheader-nav mfe-2">
+        @yield('breadcrumb-links')
+    </div>
+</div><!--c-subheader-->
 </header>

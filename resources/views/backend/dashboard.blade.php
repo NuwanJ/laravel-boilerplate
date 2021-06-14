@@ -12,4 +12,7 @@
             @lang('Welcome to the Dashboard')
         </x-slot>
     </x-backend.card>
+
+    This is an experiment :-)
+
 @endsection
