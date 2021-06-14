@@ -1,28 +1,51 @@
 <?php
 
-use App\Http\Controllers\LocaleController;
+use Illuminate\Support\Facades\Route;
 
 /*
- * Global Routes
- *
- * Routes that are used between both frontend and backend.
- */
+|--------------------------------------------------------------------------
+| Web Routes
+|--------------------------------------------------------------------------
+|
+| Here is where you can register web routes for your application. These
+| routes are loaded by the RouteServiceProvider within a group which
+| contains the "web" middleware group. Now create something great!
+|
+*/
 
-// Switch between the included languages
-Route::get('lang/{lang}', [LocaleController::class, 'change'])->name('locale.change');
+Auth::routes(['verify' => true]);
 
-/*
- * Frontend Routes
- */
-Route::group(['as' => 'frontend.'], function () {
-    includeRouteFiles(__DIR__.'/frontend/');
+Route::get('/', function () {
+    return view('welcome');
 });
 
-/*
- * Backend Routes
- *
- * These routes can only be accessed by users with type `admin`
- */
-Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => 'admin'], function () {
-    includeRouteFiles(__DIR__.'/backend/');
+// Sign in with Google
+Route::get('/google/', 'Auth\GoogleAuthController@redirect')->name('auth.google');
+Route::get('/google/callback', 'Auth\GoogleAuthController@callback');
+
+
+Route::group(['middleware' => 'verified'], function () {
+    // Only verified users can access
+
+    Route::get('/home', 'HomeController@index')->name('home')->middleware('verified');
+
+    // User routes
+    Route::group(['prefix' => 'user'], function () {
+    Route::get('edit/{user}', 'UserController@edit')->name('user.edit');
+    Route::patch('welcome/{id}', 'UserController@welcomeUpdate')->name('user.welcomeUpdate');
+    Route::patch('settings/{user}', 'UserController@settings')->name('user.settings');
+    Route::patch('password/{user}', 'UserController@password')->name('user.password');
+    });
+
+    // Resource Management
+    Route::group(['middleware' => ['role:administrator|superadministrator']], function () {
+        Route::group(['prefix' => 'admin'], function () {
+            Route::resource('users', 'Admin\UsersController');
+            Route::resource('permission', 'Admin\PermissionController');
+            Route::resource('roles', 'Admin\RolesController');
+        });
+    });
 });
+
+
+

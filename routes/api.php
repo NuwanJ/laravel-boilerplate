@@ -1,10 +1,8 @@
 <?php
 
-use Illuminate\Http\Request;
-
 /*
 |--------------------------------------------------------------------------
-| API Routes
+| API Routeswe
 |--------------------------------------------------------------------------
 |
 | Here is where you can register API routes for your application. These
@@ -13,6 +11,5 @@ use Illuminate\Http\Request;
 |
 */
 
-//Route::middleware('auth:api')->get('/user', function (Request $request) {
-//    return $request->user();
-//});
+
+
