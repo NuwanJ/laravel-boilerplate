@@ -13,6 +13,7 @@ class SocialController
 {
     /**
      * @param $provider
+     *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
     public function redirect($provider)
@@ -23,17 +24,16 @@ class SocialController
     /**
      * @param $provider
      * @param  UserService  $userService
-     * @return \Illuminate\Http\RedirectResponse
      *
+     * @return \Illuminate\Http\RedirectResponse
      * @throws \App\Exceptions\GeneralException
      */
     public function callback($provider, UserService $userService)
     {
         $user = $userService->registerProvider(Socialite::driver($provider)->user(), $provider);
 
-        if (! $user->isActive()) {
+        if (!$user->isActive()) {
             auth()->logout();
-
             return redirect()->route('frontend.auth.login')->withFlashDanger(__('Your account has been deactivated.'));
         }
 
